@@ -39,7 +39,7 @@ yarn run lint
 
 
 ## Testing
-I add coverage for testing. All the test have 100% of verage.
+I add coverage for testing. All the test have 100% of coverage.
 
 Run `yarn test:client` to run frontend tests.
 
