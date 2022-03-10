@@ -38,7 +38,7 @@ describe("presentation: set initial position", () => {
       _status: 400,
       _json: {
         msg:
-      'upperRightSizeCoordinates.upperRightSizeCoordinateX must be a `number`type, but the final value was: `NaN` (cast from the value `\"something\"`).',
+      'upperRightSizeCoordinates.upperRightSizeCoordinateX must be a `number` type, but the final value was: `NaN` (cast from the value `\"something\"`).',
       },
     });
   });

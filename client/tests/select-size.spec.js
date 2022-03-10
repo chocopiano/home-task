@@ -11,16 +11,19 @@ describe("select size", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it("should call the api with the method post and resolved", async () => {
+  it("should call the api with method post and resolved", async () => {
     expect.hasAssertions();
 
     // Arrange.
+    const upperRightSizeCoordinates = { upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" };
+
+    const mockedFunction = jest.fn();
     const post = jest.spyOn(axiosClient, "post").mockImplementation(() => Promise.resolve({ data: { positionY: "5", positionX: "5" } }));
 
     // Act.
     const component = render(<SelectSize
-    upperRightSizeCoordinates = {{ upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" }}
-    setUpperRightSizeCoordinates={() => {}} setState={() => 1} />);
+    upperRightSizeCoordinates = {{ ...upperRightSizeCoordinates }}
+    setUpperRightSizeCoordinates={mockedFunction} setState={mockedFunction} />);
     const positionXInput = component.getByPlaceholderText("positionX");
     const positionYInput = component.getByPlaceholderText("positionY");
     const setSizeInput = component.getByPlaceholderText("setSize");
@@ -31,8 +34,6 @@ describe("select size", () => {
     // Assert.
     expect(post).toHaveBeenCalledTimes(1);
     expect(post).toHaveBeenCalledWith("/plateau", { positionX: "5", positionY: "5" });
-    expect(positionXInput.value).toBe("5");
-    expect(positionYInput.value).toBe("5");
     expect(positionXInput).toBeInTheDocument();
     expect(positionYInput).toBeInTheDocument();
     expect(setSizeInput).toBeInTheDocument();
@@ -40,45 +41,22 @@ describe("select size", () => {
     expect(positionYLabel).toBeInTheDocument();
   });
 
-  it("should call the api with the method post and reject", async () => {
+  it("should not call the api when inputs are invalid", async () => {
     expect.hasAssertions();
 
     // Arrange.
+    const upperRightSizeCoordinates = { upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "" };
 
+    const mockedFunction = jest.fn();
     const post = jest.spyOn(axiosClient, "post").mockImplementation(() => Promise.reject({ response: { data: { msg: "something" } } }));
 
     // Act.
     const component = render(<SelectSize
-    upperRightSizeCoordinates = {{ upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" }}
-    setUpperRightSizeCoordinates={() => {}} setState={() => 1} />);
+    upperRightSizeCoordinates = {{ ...upperRightSizeCoordinates }}
+    setUpperRightSizeCoordinates={mockedFunction} setState={mockedFunction} />);
     const positionXInput = component.getByPlaceholderText("positionX");
     const positionYInput = component.getByPlaceholderText("positionY");
     const setSizeInput = component.getByPlaceholderText("setSize");
-
-    fireEvent.submit(setSizeInput);
-
-    // Assert.
-    expect(positionXInput).toBeInTheDocument();
-    expect(positionYInput).toBeInTheDocument();
-    expect(setSizeInput).toBeInTheDocument();
-    expect(post).toHaveBeenCalledTimes(1);
-    expect(post).toHaveBeenCalledWith("/plateau", { positionX: "5", positionY: "5" });
-  });
-
-  it("should not call the api", async () => {
-    expect.hasAssertions();
-
-    // Arrange.
-    const post = jest.spyOn(axiosClient, "post").mockImplementation(() => Promise.reject({ response: { data: { msg: "something" } } }));
-
-    // Act.
-    const component = render(<SelectSize
-    upperRightSizeCoordinates = {{ upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "" }}
-    setUpperRightSizeCoordinates={() => {}} setState={() => 1} />);
-    const positionXInput = component.getByPlaceholderText("positionX");
-    const positionYInput = component.getByPlaceholderText("positionY");
-    const setSizeInput = component.getByPlaceholderText("setSize");
-
     fireEvent.submit(setSizeInput);
 
     // Assert.
@@ -88,7 +66,7 @@ describe("select size", () => {
     expect(post).not.toHaveBeenCalled();
   });
 
-  it("should not call the api1", async () => {
+  it("should call the api and reject", async () => {
     expect.hasAssertions();
 
     // Arrange.
@@ -101,10 +79,11 @@ describe("select size", () => {
     wrapper.find("input").first().simulate("change", { target: { value: "1" } });
     wrapper.find("input").at(1).simulate("change", { target: { value: "1" } });
     wrapper.find("form").first().simulate("submit");
+
+    // Assert.
     expect(wrapper.find("input").at(0).prop("value")).toBe("1");
     expect(wrapper.find("input").at(1).prop("value")).toBe("1");
     expect(post).toHaveBeenCalledTimes(1);
     expect(post).toHaveBeenCalledWith("/plateau", { positionX: "1", positionY: "1" });
-    // Assert.
   });
 });

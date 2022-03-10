@@ -41,29 +41,39 @@ const App = () => {
 
   return (
 		<div className='App' style={{ textAlign: "center" }}>
+
 			<img src={WallEImg} height="200" alt="wall-e robot"/>
 
 			<MainText>MARS ROVER</MainText>
 
-			{state === 0 ? <SelectSize
+			{state === 0
+			  ? <SelectSize
 					upperRightSizeCoordinates={upperRightSizeCoordinates}
 					setUpperRightSizeCoordinates={setUpperRightSizeCoordinates} setState={setState}/>
+
 			  : (state === 1 ? <SelectInitialPosition
 					 upperRightSizeCoordinates = {upperRightSizeCoordinates}
 					 position={position} setPosition={setPosition} setState={setState}/>
-			  : <InsertInstructions
-						upperRightSizeCoordinates = {upperRightSizeCoordinates} position={position}
-            setResult={setResult}/>)}
+
+			    : <InsertInstructions
+                upperRightSizeCoordinates = {upperRightSizeCoordinates} position={position}
+                setResult={setResult}/>
+			  )
+      }
+
       {Object.values(result).every((value) => value !== "")
         ? (
-        <>
-          <MainText>Result</MainText>
-          <MainText>X: {result.positionX}</MainText>
-          <MainText>Y: {result.positionY}</MainText>
-          <MainText>Compass Point: {result.compassPoint}</MainText>
-        </>
-        ) : null}
+          <>
+            <MainText>Result</MainText>
+            <MainText>X: {result.positionX}</MainText>
+            <MainText>Y: {result.positionY}</MainText>
+            <MainText>Compass Point: {result.compassPoint}</MainText>
+          </>
+        ) : null
+      }
+
 			<Input type="submit" onClick={() => restartPosition()} value="Restart"/>
+
 		</div>
   );
 };

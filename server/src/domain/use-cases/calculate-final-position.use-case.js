@@ -10,6 +10,7 @@ exports.CalculateFinalPositionUseCase = ({ position, upperRightSizeCoordinates, 
 
   if (invalidInstructions.length > 0) {
     const error = { msg: `These instructions are not valid ${invalidInstructions}` };
+
     throw error;
   }
 
@@ -26,11 +27,13 @@ exports.CalculateFinalPositionUseCase = ({ position, upperRightSizeCoordinates, 
 
     if (currentPositionX < 0 || currentPositionX > upperRightSizeCoordinateX) {
       error = { msg: `Position x: ${currentPositionX} is out of the plateau` };
+
       throw error;
     }
 
     if (currentPositionY < 0 || currentPositionY > upperRightSizeCoordinateY) {
       error = { msg: `Position y: ${currentPositionY} is out of the plateau` };
+
       throw error;
     }
   });

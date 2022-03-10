@@ -21,7 +21,7 @@ describe("app", () => {
     fireEvent.click(input);
   });
 
-  it("should show text for introduce the user tentative initial position", async () => {
+  it("should show text for introduce user tentative initial position", async () => {
     expect.hasAssertions();
 
     // Arrange.

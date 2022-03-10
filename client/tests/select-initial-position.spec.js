@@ -11,18 +11,20 @@ describe("select initial position", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it("should call the api with the method post and resolved", async () => {
+  it("should call the api with method post and resolved", async () => {
     expect.hasAssertions();
 
     // Arrange.
-    const data = { positionX: "1", positionY: "1", compassPoint: "N" };
-    const post = jest.spyOn(axiosClient, "post").mockImplementation(() => Promise.resolve({ data }));
+    const position = { positionX: "1", positionY: "1", compassPoint: "N" };
+    const upperRightSizeCoordinates = { upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" };
+
+    const mockedFunction = jest.fn();
+    const post = jest.spyOn(axiosClient, "post").mockImplementation(() => Promise.resolve({ data: { ...position } }));
 
     // Act.
-    // position, upperRightSizeCoordinates, setPosition, setState,
     const component = render(<SelectInitialPosition
-      position={{ positionX: "1", positionY: "1", compassPoint: "N" }}
-      upperRightSizeCoordinates = {{ upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" }} setPosition={() => {}} setState={() => 1} />);
+      position={{ ...position }}
+      upperRightSizeCoordinates = {{ ...upperRightSizeCoordinates }} setPosition={mockedFunction} setState={mockedFunction} />);
     const positionXInput = component.getByPlaceholderText("positionX");
     const positionYInput = component.getByPlaceholderText("positionY");
     const compassPointInput = component.getByPlaceholderText("compassPoint");
@@ -36,11 +38,11 @@ describe("select initial position", () => {
     expect(post).toHaveBeenCalledTimes(1);
     expect(post).toHaveBeenCalledWith("/position", {
       tentativePosition: {
-        tentativePositionX: data.positionX,
-        tentativePositionY: data.positionY,
-        compassPoint: data.compassPoint,
+        tentativePositionX: position.positionX,
+        tentativePositionY: position.positionY,
+        compassPoint: position.compassPoint,
       },
-      upperRightSizeCoordinates: { upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" },
+      upperRightSizeCoordinates,
 
     });
     expect(positionXInput.value).toBe("1");
@@ -52,42 +54,6 @@ describe("select initial position", () => {
     expect(positionXLabel).toBeInTheDocument();
     expect(positionYLabel).toBeInTheDocument();
     expect(compassPointLabel).toBeInTheDocument();
-  });
-
-  it("should call the api with the method post and reject", async () => {
-    expect.hasAssertions();
-
-    // Arrange.
-    const data = { positionX: "1", positionY: "1", compassPoint: "N" };
-
-    const post = jest.spyOn(axiosClient, "post").mockImplementation(() => Promise.reject({ response: { data: { msg: "something" } } }));
-
-    // Act.
-    const component = render(<SelectInitialPosition
-      position={{ positionX: "1", positionY: "1", compassPoint: "N" }}
-      upperRightSizeCoordinates = {{ upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" }} setPosition={() => {}} setState={() => 1} />);
-
-    const positionXInput = component.getByPlaceholderText("positionX");
-    const positionYInput = component.getByPlaceholderText("positionY");
-    const compassPointInput = component.getByPlaceholderText("compassPoint");
-    const selectInitialPositionInput = component.getByPlaceholderText("selectInitialPosition");
-    fireEvent.submit(selectInitialPositionInput);
-
-    // Assert.
-    expect(positionXInput).toBeInTheDocument();
-    expect(positionYInput).toBeInTheDocument();
-    expect(compassPointInput).toBeInTheDocument();
-    expect(selectInitialPositionInput).toBeInTheDocument();
-    expect(post).toHaveBeenCalledTimes(1);
-    expect(post).toHaveBeenCalledWith("/position", {
-      tentativePosition: {
-        tentativePositionX: data.positionX,
-        tentativePositionY: data.positionY,
-        compassPoint: data.compassPoint,
-      },
-      upperRightSizeCoordinates: { upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" },
-
-    });
   });
 
   it("should not call the api", async () => {
@@ -106,8 +72,6 @@ describe("select initial position", () => {
     const selectInitialPositionInput = component.getByPlaceholderText("selectInitialPosition");
     fireEvent.submit(selectInitialPositionInput);
 
-    fireEvent.submit(selectInitialPositionInput);
-
     // Assert.
     expect(positionXInput).toBeInTheDocument();
     expect(positionYInput).toBeInTheDocument();
@@ -117,7 +81,7 @@ describe("select initial position", () => {
     expect(post).not.toHaveBeenCalled();
   });
 
-  it("should notj call the api", async () => {
+  it("should call the api and reject", async () => {
     expect.hasAssertions();
 
     // Arrange.
@@ -125,15 +89,17 @@ describe("select initial position", () => {
 
     const post = jest.spyOn(axiosClient, "post")
       .mockImplementation(() => Promise.reject({ response: { data: { msg: "something" } } }));
+    const mockedUseState = jest.fn();
+    React.useState = mockedUseState.mockImplementation(() => ["error", () => jest.fn()]);
 
     // Act.
     const wrapper = mount(<SelectInitialPosition position={{ positionX: "1", positionY: "1", compassPoint: "N" }}
     upperRightSizeCoordinates = {{ upperRightSizeCoordinateX: "5", upperRightSizeCoordinateY: "5" }}
     setPosition={() => {}} setState={() => 1} />);
+
     wrapper.find("input").first().simulate("change", { target: { value: "1" } });
     wrapper.find("input").at(1).simulate("change", { target: { value: "1" } });
     wrapper.find("select").simulate("change", { target: { value: "N" } });
-
     wrapper.find("form").first().simulate("submit");
 
     expect(wrapper.find("input").at(0).prop("value")).toBe("1");

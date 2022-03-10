@@ -1,7 +1,7 @@
 const { calculateNextPosition } = require("../../../src/domain/helpers/calculate-next-position");
 
 describe("success", () => {
-  it("should return 13N for LMLMLMLMM instructions", () => {
+  it("should return the same position by default", () => {
     expect.hasAssertions();
 
     // Arrange.

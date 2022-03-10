@@ -9,11 +9,13 @@ exports.SetInitialPositionUseCase = ({ tentativePosition, upperRightSizeCoordina
 
   if (tentativePositionX < 0 || tentativePositionX > upperRightSizeCoordinateX) {
     error = { msg: `Position x: ${tentativePositionX} is out of the plateau` };
+
     throw error;
   }
 
   if (tentativePositionY < 0 || tentativePositionY > upperRightSizeCoordinateY) {
     error = { msg: `Position y: ${tentativePositionY} is out of the plateau` };
+
     throw error;
   }
 
@@ -21,6 +23,7 @@ exports.SetInitialPositionUseCase = ({ tentativePosition, upperRightSizeCoordina
 
   if (!isCompassPointValid) {
     error = { msg: "Compass point must be N, S, E ,W" };
+
     throw error;
   }
 

@@ -11,6 +11,9 @@ const Input = styled.input`
 	font-size: 20px;
 	border-radius: 5px;
 	transition: background-color .3s ease;
+	::-webkit-input-placeholder {
+   color:transparent;
+}
 
 	&:hover {
 		background-color: rgba(0, 35, 100, 1);
