@@ -13,6 +13,8 @@ To start running the server:
 yarn server
 ```
 
+Backend follows the clean architure.
+
 ### Frontend
 
 1) Set the size of the plateau and press "SET SIZE".
